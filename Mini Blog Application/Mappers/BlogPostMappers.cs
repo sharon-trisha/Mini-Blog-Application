@@ -17,5 +17,15 @@ namespace Mini_Blog_Application.Mappers
                 Author = blogModel.Author
             };
         }
+
+        public static BlogPost ToBlogPostFromCreateDto(this CreateBlogPostRequestDto blogDto)
+        {
+            return new BlogPost
+            {
+                Title = blogDto.Title,
+                Content = blogDto.Content,
+
+            };
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mini_Blog_Application.DTO.Blog;
 using Mini_Blog_Application.Mappers;
 using Mini_Blog_Application.Models;
 
@@ -38,6 +39,14 @@ namespace Mini_Blog_Application.Controllers
             return Ok(blog.ToBlogPostDto());
         }
 
+        [HttpPost]
+        public IActionResult Create([FromBody] CreateBlogPostRequestDto BlogDto)
+        {
+            var blogModel = BlogDto.ToBlogPostFromCreateDto();
+            _context.BlogPost.Add(blogModel);
 
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = blogModel.Id }, blogModel.ToBlogPostDto());
+        }
     }
 }
