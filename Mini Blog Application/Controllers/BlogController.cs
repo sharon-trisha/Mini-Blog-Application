@@ -48,5 +48,24 @@ namespace Mini_Blog_Application.Controllers
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetById), new { id = blogModel.Id }, blogModel.ToBlogPostDto());
         }
+
+        [HttpPut]
+        [Route("{id}")]
+        public IActionResult Update([FromRoute] string id, [FromBody] UpdateBlogPostRequestDto UpdateDto)
+        {
+            var blog = _context.BlogPost.FirstOrDefault(b => b.Id.Equals(id));
+
+            if(blog == null)
+            {
+                return NotFound();
+            }
+
+            blog.Title = UpdateDto.Title;
+            blog.Content = UpdateDto.Content;
+
+            _context.SaveChanges();
+
+            return Ok(blog.ToBlogPostDto());
+        }
     }
 }
