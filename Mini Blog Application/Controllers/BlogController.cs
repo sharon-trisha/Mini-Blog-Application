@@ -67,5 +67,24 @@ namespace Mini_Blog_Application.Controllers
 
             return Ok(blog.ToBlogPostDto());
         }
+
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete([FromRoute] string id)
+        {
+            var blogModel = _context.BlogPost.FirstOrDefault(x => (x.Id).Equals(id));
+            
+            if(blogModel == null)
+            {
+                return BadRequest();
+            }
+
+            _context.BlogPost.Remove(blogModel);
+
+            _context.SaveChanges();
+
+            return NoContent();
+        }
     }
 }
