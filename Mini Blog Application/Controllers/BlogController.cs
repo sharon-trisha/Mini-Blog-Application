@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Mini_Blog_Application.DTO.Blog;
 using Mini_Blog_Application.Mappers;
 using Mini_Blog_Application.Models;
@@ -18,18 +19,18 @@ namespace Mini_Blog_Application.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var blogs = _context.BlogPost.ToList()
-                .Select(b => b.ToBlogPostDto());
+            var blogs = await _context.BlogPost.ToListAsync();
+            var blogModel = blogs.Select(b => b.ToBlogPostDto());
 
             return Ok(blogs);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] string id)
+        public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var blog = _context.BlogPost.Find(id);
+            var blog = await _context.BlogPost.FindAsync(id);
 
             if (blog == null)
             {
@@ -40,20 +41,22 @@ namespace Mini_Blog_Application.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateBlogPostRequestDto BlogDto)
+        public async Task<IActionResult> Create([FromBody] CreateBlogPostRequestDto BlogDto)
         {
             var blogModel = BlogDto.ToBlogPostFromCreateDto();
-            _context.BlogPost.Add(blogModel);
 
-            _context.SaveChanges();
+
+            await _context.BlogPost.AddAsync(blogModel);
+
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = blogModel.Id }, blogModel.ToBlogPostDto());
         }
 
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Update([FromRoute] string id, [FromBody] UpdateBlogPostRequestDto UpdateDto)
+        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateBlogPostRequestDto UpdateDto)
         {
-            var blog = _context.BlogPost.FirstOrDefault(b => b.Id.Equals(id));
+            var blog = await _context.BlogPost.FirstOrDefaultAsync(b => b.Id.Equals(id));
 
             if(blog == null)
             {
@@ -63,7 +66,7 @@ namespace Mini_Blog_Application.Controllers
             blog.Title = UpdateDto.Title;
             blog.Content = UpdateDto.Content;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(blog.ToBlogPostDto());
         }
@@ -71,9 +74,9 @@ namespace Mini_Blog_Application.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public IActionResult Delete([FromRoute] string id)
+        public async Task<IActionResult> Delete([FromRoute] string id)
         {
-            var blogModel = _context.BlogPost.FirstOrDefault(x => (x.Id).Equals(id));
+            var blogModel = await _context.BlogPost.FirstOrDefaultAsync(x => (x.Id).Equals(id));
             
             if(blogModel == null)
             {
@@ -82,7 +85,7 @@ namespace Mini_Blog_Application.Controllers
 
             _context.BlogPost.Remove(blogModel);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
