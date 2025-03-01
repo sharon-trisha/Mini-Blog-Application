@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mini_Blog_Application.DTO.Blog;
+using Mini_Blog_Application.Interfaces;
 using Mini_Blog_Application.Mappers;
 using Mini_Blog_Application.Models;
 
@@ -13,15 +14,18 @@ namespace Mini_Blog_Application.Controllers
     {
 
         private ApplicationDbContext _context;
-        public BlogController(ApplicationDbContext context)
+        private readonly IBlogPostRepository _blogRepo;
+        public BlogController(ApplicationDbContext context, IBlogPostRepository blogRepo)
         {
+            _blogRepo = blogRepo;
             _context = context;
+            
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var blogs = await _context.BlogPost.ToListAsync();
+            var blogs = await _blogRepo.GetAllAsync();
             var blogModel = blogs.Select(b => b.ToBlogPostDto());
 
             return Ok(blogs);
@@ -30,7 +34,7 @@ namespace Mini_Blog_Application.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var blog = await _context.BlogPost.FindAsync(id);
+            var blog = await _blogRepo.GetByIdAsync(id);
 
             if (blog == null)
             {
@@ -46,9 +50,9 @@ namespace Mini_Blog_Application.Controllers
             var blogModel = BlogDto.ToBlogPostFromCreateDto();
 
 
-            await _context.BlogPost.AddAsync(blogModel);
+            await _blogRepo.CreateAsync(blogModel);
 
-            await _context.SaveChangesAsync();
+            
             return CreatedAtAction(nameof(GetById), new { id = blogModel.Id }, blogModel.ToBlogPostDto());
         }
 
@@ -56,17 +60,16 @@ namespace Mini_Blog_Application.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateBlogPostRequestDto UpdateDto)
         {
-            var blog = await _context.BlogPost.FirstOrDefaultAsync(b => b.Id.Equals(id));
+            var blog = await _blogRepo.UpdateAsync(id, UpdateDto);
 
             if(blog == null)
             {
                 return NotFound();
             }
 
-            blog.Title = UpdateDto.Title;
-            blog.Content = UpdateDto.Content;
+            
 
-            await _context.SaveChangesAsync();
+            
 
             return Ok(blog.ToBlogPostDto());
         }
@@ -76,16 +79,16 @@ namespace Mini_Blog_Application.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
-            var blogModel = await _context.BlogPost.FirstOrDefaultAsync(x => (x.Id).Equals(id));
+            var blogModel = await _blogRepo.DeleteAsync(id);
             
             if(blogModel == null)
             {
                 return BadRequest();
             }
 
-            _context.BlogPost.Remove(blogModel);
+            
 
-            await _context.SaveChangesAsync();
+            
 
             return NoContent();
         }
