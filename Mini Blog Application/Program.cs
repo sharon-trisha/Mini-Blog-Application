@@ -26,6 +26,7 @@ namespace Mini_Blog_Application
             });
 
             builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
             var app = builder.Build();
 
