@@ -17,5 +17,7 @@ namespace Mini_Blog_Application.DTO.Blog
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         
         public User Author { get; set; }
+
+        public List<CommentDTO> Comments { get; set; }
     }
 }

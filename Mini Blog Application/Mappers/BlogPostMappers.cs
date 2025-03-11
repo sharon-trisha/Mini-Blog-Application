@@ -14,7 +14,8 @@ namespace Mini_Blog_Application.Mappers
                 Title = blogModel.Title,
                 Content = blogModel.Content,
                 CreatedAt = blogModel.CreatedAt,
-                Author = blogModel.Author
+                Author = blogModel.Author,
+                Comments = blogModel.Comments.Select(c => c.ToCommentDto()).ToList()
             };
         }
 

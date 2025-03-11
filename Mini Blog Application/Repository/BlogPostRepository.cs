@@ -17,9 +17,9 @@ namespace Mini_Blog_Application.Repository
             
             _context = context;
         }
-        public Task<List<BlogPost>> GetAllAsync()
+        public async Task<List<BlogPost>> GetAllAsync()
         {
-            return _context.BlogPost.ToListAsync();
+            return await _context.BlogPost.Include(c => c.Comments).ToListAsync();
         }
         public async Task<BlogPost> CreateAsync(BlogPost post)
         {
@@ -63,7 +63,7 @@ namespace Mini_Blog_Application.Repository
 
         public async Task<BlogPost?> GetByIdAsync(string id)
         {
-            return await _context.BlogPost.FindAsync(id);
+            return await _context.BlogPost.Include(c => c.Comments).FirstOrDefaultAsync(b => b.Id.Equals(id));
         }
 
         public async Task<BlogPost> UpdateAsync(string id, UpdateBlogPostRequestDto blogDto)

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Mini_Blog_Application.Interfaces;
 using Mini_Blog_Application.Models;
 using MiniBlogApplication.Models;
@@ -15,6 +16,12 @@ namespace Mini_Blog_Application.Repository
         public async Task<List<Comment>> GetAllAsync()
         {
             return await _context.Comments.ToListAsync();
+        }
+
+        public async Task<Comment?> GetByIdAsync(int id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+            return comment;
         }
     }
 }
