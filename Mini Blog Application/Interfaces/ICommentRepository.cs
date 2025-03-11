@@ -8,5 +8,6 @@ namespace Mini_Blog_Application.Interfaces
         Task<Comment?> GetByIdAsync(int id);
 
         Task<Comment> CreateAsync(Comment commentModel);
+        Task<Comment?> UpdateAsync(int id, Comment commentModel);
     }
 }

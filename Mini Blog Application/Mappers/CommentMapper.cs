@@ -28,5 +28,16 @@ namespace Mini_Blog_Application.Mappers
                 BlogPostId = blogId
             };
         }
+
+        public static Comment ToCommentFromUpdate(this UpdateCommentRequestDto commentModel)
+        {
+            return new Comment
+            {
+
+                Content = commentModel.Content,
+
+                
+            };
+        }
     }
 }

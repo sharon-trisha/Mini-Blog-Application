@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mini_Blog_Application.DTO.Blog;
 using Mini_Blog_Application.DTO.Comment;
 using Mini_Blog_Application.Interfaces;
 using Mini_Blog_Application.Mappers;
@@ -55,7 +56,24 @@ namespace Mini_Blog_Application.Controllers
             var commentModel = commentDto.ToCommentFromCreate(blogId);
             await _commentRepo.CreateAsync(commentModel);
 
-            return CreatedAtAction(nameof(GetById), new { id = commentModel }, commentModel.ToCommentDto());
+            return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
+
+        }
+
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto updateDto)
+        {
+
+            var comment = await _commentRepo.UpdateAsync(id, updateDto.ToCommentFromUpdate());
+
+            if(comment == null)
+            {
+                return NotFound("Comment not found");
+            }
+
+            return Ok(comment.ToCommentDto());
 
         }
     }

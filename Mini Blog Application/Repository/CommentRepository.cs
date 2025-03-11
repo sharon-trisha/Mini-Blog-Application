@@ -34,6 +34,21 @@ namespace Mini_Blog_Application.Repository
             return comment;
         }
 
-        
+        public async Task<Comment?> UpdateAsync(int id, Comment commentModel)
+        {
+            var existingComment = await _context.Comments.FindAsync(id);
+
+            if(existingComment == null)
+            {
+                return null;
+            }
+
+            existingComment.Content = commentModel.Content;
+
+            await _context.SaveChangesAsync();
+
+            return existingComment;
+
+        }
     }
 }
