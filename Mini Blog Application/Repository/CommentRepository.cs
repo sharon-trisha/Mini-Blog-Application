@@ -13,6 +13,16 @@ namespace Mini_Blog_Application.Repository
         {
             _context = context;
         }
+
+        public async Task<Comment> CreateAsync(Comment commentModel)
+        {
+            await _context.Comments.AddAsync(commentModel);
+
+            await _context.SaveChangesAsync();
+
+            return commentModel;
+        }
+
         public async Task<List<Comment>> GetAllAsync()
         {
             return await _context.Comments.ToListAsync();
@@ -23,5 +33,7 @@ namespace Mini_Blog_Application.Repository
             var comment = await _context.Comments.FindAsync(id);
             return comment;
         }
+
+        
     }
 }

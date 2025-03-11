@@ -1,4 +1,5 @@
 ﻿using Mini_Blog_Application.DTO;
+using Mini_Blog_Application.DTO.Comment;
 using MiniBlogApplication.Models;
 
 namespace Mini_Blog_Application.Mappers
@@ -14,6 +15,17 @@ namespace Mini_Blog_Application.Mappers
                 CreatedAt = commentModel.CreatedAt,
                 BlogPostId = commentModel.BlogPostId,
                 UserId = commentModel.UserId
+            };
+        }
+
+        public static Comment ToCommentFromCreate(this CreateCommentDTO commentModel, string blogId)
+        {
+            return new Comment
+            {
+         
+                Content = commentModel.Content,
+
+                BlogPostId = blogId
             };
         }
     }

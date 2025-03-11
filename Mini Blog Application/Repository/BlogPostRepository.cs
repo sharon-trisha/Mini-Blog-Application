@@ -94,6 +94,9 @@ namespace Mini_Blog_Application.Repository
 
         }
 
-
+        public Task<bool> BlogExist(string id)
+        {
+            return _context.BlogPost.AnyAsync(b => b.Id.Equals(id));
+        }
     }
 }

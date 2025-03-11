@@ -11,5 +11,7 @@ namespace Mini_Blog_Application.Interfaces
         Task<BlogPost> UpdateAsync(string id, UpdateBlogPostRequestDto
             blogDto);
         Task<BlogPost> DeleteAsync(string id);
+
+        Task<bool> BlogExist(string id);
     }
 }

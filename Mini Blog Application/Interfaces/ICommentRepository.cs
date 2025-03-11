@@ -6,5 +6,7 @@ namespace Mini_Blog_Application.Interfaces
     {
         Task<List<Comment>> GetAllAsync();
         Task<Comment?> GetByIdAsync(int id);
+
+        Task<Comment> CreateAsync(Comment commentModel);
     }
 }
