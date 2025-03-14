@@ -40,7 +40,10 @@ namespace Mini_Blog_Application.Repository
                 }
             }
 
-            return await blogs.ToListAsync();
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+
+            return await blogs.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
         public async Task<BlogPost> CreateAsync(BlogPost post)
         {
