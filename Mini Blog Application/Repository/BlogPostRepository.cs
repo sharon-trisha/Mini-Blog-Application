@@ -32,6 +32,14 @@ namespace Mini_Blog_Application.Repository
                 blogs = blogs.Where(b => b.UserId.Contains(query.Author));
             }
 
+            if(!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if(query.SortBy.Equals("Title", StringComparison.OrdinalIgnoreCase))
+                {
+                    blogs = query.IsDescending ? blogs.OrderByDescending(s => s.Title) : blogs.OrderBy(b => b.Title);
+                }
+            }
+
             return await blogs.ToListAsync();
         }
         public async Task<BlogPost> CreateAsync(BlogPost post)
