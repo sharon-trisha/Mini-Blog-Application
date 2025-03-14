@@ -22,6 +22,10 @@ namespace Mini_Blog_Application.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var comments = await _commentRepo.GetAllAsync();
 
             var commentDto = comments.Select(s => s.ToCommentDto());
@@ -29,9 +33,13 @@ namespace Mini_Blog_Application.Controllers
             return Ok(commentDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var comment = await _commentRepo.GetByIdAsync(id);
 
             if (comment == null)
@@ -47,8 +55,12 @@ namespace Mini_Blog_Application.Controllers
         [HttpPost("{blogId}")]
         public async Task<IActionResult> Create([FromRoute] string blogId, CreateCommentDTO commentDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            if(!await _blogRepo.BlogExist(blogId))
+            if (!await _blogRepo.BlogExist(blogId))
             {
                 return BadRequest("Blog does not exist");
             }
@@ -62,9 +74,13 @@ namespace Mini_Blog_Application.Controllers
 
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto updateDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var comment = await _commentRepo.UpdateAsync(id, updateDto.ToCommentFromUpdate());
 
@@ -79,9 +95,13 @@ namespace Mini_Blog_Application.Controllers
 
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var commentModel = await _commentRepo.DeleteAsync(id);
 
             if(commentModel == null)

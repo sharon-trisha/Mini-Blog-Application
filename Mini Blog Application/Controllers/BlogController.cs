@@ -25,6 +25,10 @@ namespace Mini_Blog_Application.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var blogs = await _blogRepo.GetAllAsync();
             var blogModel = blogs.Select(b => b.ToBlogPostDto());
 
@@ -34,6 +38,10 @@ namespace Mini_Blog_Application.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var blog = await _blogRepo.GetByIdAsync(id);
 
             if (blog == null)
@@ -47,6 +55,11 @@ namespace Mini_Blog_Application.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBlogPostRequestDto BlogDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var blogModel = BlogDto.ToBlogPostFromCreateDto();
 
 
@@ -60,6 +73,12 @@ namespace Mini_Blog_Application.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateBlogPostRequestDto UpdateDto)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var blog = await _blogRepo.UpdateAsync(id, UpdateDto);
 
             if(blog == null)
@@ -79,6 +98,12 @@ namespace Mini_Blog_Application.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
             var blogModel = await _blogRepo.DeleteAsync(id);
             
             if(blogModel == null)
