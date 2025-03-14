@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Mini_Blog_Application.DTO.Blog;
+using Mini_Blog_Application.Helper;
 using Mini_Blog_Application.Interfaces;
 using Mini_Blog_Application.Mappers;
 using Mini_Blog_Application.Models;
@@ -23,13 +24,13 @@ namespace Mini_Blog_Application.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var blogs = await _blogRepo.GetAllAsync();
+            var blogs = await _blogRepo.GetAllAsync(query);
             var blogModel = blogs.Select(b => b.ToBlogPostDto());
 
             return Ok(blogs);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Mini_Blog_Application.DTO.Blog;
+using Mini_Blog_Application.Helper;
 using Mini_Blog_Application.Interfaces;
 using Mini_Blog_Application.Migrations;
 using Mini_Blog_Application.Models;
@@ -17,9 +18,21 @@ namespace Mini_Blog_Application.Repository
             
             _context = context;
         }
-        public async Task<List<BlogPost>> GetAllAsync()
+        public async Task<List<BlogPost>> GetAllAsync(QueryObject query)
         {
-            return await _context.BlogPost.Include(c => c.Comments).ToListAsync();
+            var blogs = _context.BlogPost.Include(c => c.Comments).AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(query.Title))
+            {
+                blogs = blogs.Where(b => b.Title.Contains(query.Title));
+            }
+
+            if(!string.IsNullOrWhiteSpace(query.Author))
+            {
+                blogs = blogs.Where(b => b.UserId.Contains(query.Author));
+            }
+
+            return await blogs.ToListAsync();
         }
         public async Task<BlogPost> CreateAsync(BlogPost post)
         {
