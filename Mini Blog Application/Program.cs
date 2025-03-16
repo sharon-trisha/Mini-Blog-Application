@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mini_Blog_Application.Interfaces;
 using Mini_Blog_Application.Models;
 using Mini_Blog_Application.Repository;
+using Mini_Blog_Application.Service;
 using MiniBlogApplication.Models;
 
 namespace Mini_Blog_Application
@@ -23,7 +24,7 @@ namespace Mini_Blog_Application
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            
             builder.Services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -68,6 +69,7 @@ namespace Mini_Blog_Application
 
             builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
 
             var app = builder.Build();
 
